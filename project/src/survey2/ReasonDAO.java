@@ -5,7 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ReasonDAO {
 	private JdbcTemplate jdbcTemplate;
@@ -98,7 +102,6 @@ public class ReasonDAO {
 		return ls.isEmpty()? false:true;
 	}
 	
-	
 	public List<ReasonVO> selectAll(int coffee_number) {
 		ArrayList<ReasonVO> ls = new ArrayList<>();
 		Connection conn = null;
@@ -148,5 +151,47 @@ public class ReasonDAO {
 		}
 		return (ls.size()==0) ? null : ls;
 	}
-
+	
+	public Map<String,String> showPer(int coffee_number) {
+		HashMap<String,String> hm = new HashMap<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select \"REASON\", ROUND(RATIO_TO_REPORT(count) over(),2) * 100 || '%' as COUNT_RATIO from \"REASON\" where \"COFFEE_NUMBER\"=?";
+		try {
+			conn = jdbcTemplate.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, coffee_number);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				hm.put(rs.getString("REASON"), rs.getString("COUNT_RATIO"));
+			}
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return (hm.size()==0) ? null : hm;	
+	}
 }

@@ -33,7 +33,7 @@ public class BrandVO {
 	}
 	@Override
 	public String toString() {
-		return "BrandVO [number=" + number + ", brand=" + brand + ", count=" + count + "]";
+		return number+". "+brand + " " + count + "ǥ\n";
 	}
 	
 

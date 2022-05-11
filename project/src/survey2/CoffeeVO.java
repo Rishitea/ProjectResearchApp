@@ -41,7 +41,7 @@ public class CoffeeVO {
 
 	@Override
 	public String toString() {
-		return "CoffeeVO [number=" + number + ", category=" + category + ", count=" + count + "]";
+		return category + " " + count + "ǥ\n";
 	}
 	
 }
