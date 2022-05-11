@@ -77,6 +77,54 @@ public class BrandDAO {
 		}
 		return ret;
 	}
+	//Brand 추가할 때 이미 있으면 리젝하는 기능
+	public boolean checkBrand(String name) {
+		ArrayList<BrandVO> ls = new ArrayList<>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String sql = "select * from \"BRAND\" where \"BRAND\"=?";
+		try {
+			conn = jdbcTemplate.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				BrandVO tmp = new BrandVO(
+						rs.getInt("NUMBER"),
+						rs.getString("BRAND"),
+						rs.getInt("COUNT")
+						);
+				ls.add(tmp);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if(conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ls.isEmpty()? false:true;
+		
+	}
 	
 	public boolean checkBrand(int number) { //입력값이 Brand테이블에 존재하는지 확인
 		ArrayList<BrandVO> ls = new ArrayList<>();

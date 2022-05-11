@@ -9,7 +9,8 @@ import java.util.Scanner;
 public class Main {
 
 	public static void main(String[] args) {
-		boolean flag = true;
+		boolean flag = true; //while문 flag
+		boolean flagB = true; //checkBrand flag
 		int choice = -1;
 		int cBrand = -1;
 		int cReason = -1;
@@ -44,15 +45,23 @@ public class Main {
 								System.out.println(tmp2.getNumber()+". "+tmp2.getBrand());
 							}
 							System.out.println("0. 기타(직접입력)");
+							
+							
 							cBrand = in.nextInt(); in.nextLine(); //입력값
+							
 							try {
 								if (!(bDao.checkBrand(cBrand))) {
 									if (cBrand == 0) {
 										System.out.println("상호명 입력: ");
 										String bName = in.nextLine();
-										bDao.insertBrand(bName);
+										if (!bDao.checkBrand(bName)) {
+											bDao.insertBrand(bName);
+										} else {
+											System.out.println("이미 존재하는 Brand입니다.");
+											continue;
+										}
 									} else {
-										System.out.println("다시 입력해주세요.");
+										System.out.println("범위 밖의 숫자를 입력하였습니다.");
 										continue;
 									}
 								} else {
