@@ -34,7 +34,7 @@ public class Main {
 					for (CoffeeVO tmp1 : cRet) {
 						System.out.println(tmp1.getNumber()+". "+tmp1.getCategory());
 					}
-					choice = in.nextInt();in.nextLine(); //입력값
+					choice = in.nextInt();in.nextLine();
 					if (choice == 1 || choice == 2) {
 						cDao.updateC(choice); //coffee 테이블에 값 저장
 						if (choice == 1) { //프차 -> 브랜드 연결
@@ -52,13 +52,16 @@ public class Main {
 							try {
 								if (!(bDao.checkBrand(cBrand))) {
 									if (cBrand == 0) {
-										System.out.println("상호명 입력: ");
-										String bName = in.nextLine();
-										if (!bDao.checkBrand(bName)) {
-											bDao.insertBrand(bName);
-										} else {
-											System.out.println("이미 존재하는 Brand입니다.");
-											continue;
+										loop2 : while(true) {
+											System.out.println("상호명 입력: ");
+											String bName = in.nextLine();
+											if (!bDao.checkBrand(bName)) {
+												bDao.insertBrand(bName);
+												break;
+											} else {
+												System.out.println("이미 존재하는 Brand입니다.");
+												continue loop2;
+											}
 										}
 									} else {
 										System.out.println("범위 밖의 숫자를 입력하였습니다.");
@@ -69,6 +72,7 @@ public class Main {
 								}
 							} catch (NumberFormatException e) {
 							System.out.println("입력값이 숫자가 아닙니다.");
+							continue;
 							}
 							//프차 선택 => Reason 고르기
 							System.out.println("==========================");
@@ -110,9 +114,11 @@ public class Main {
 						} //else 끝 (choice = 1 or 2)
 						continue;
 					}
-					else System.out.println("입력 값이 잘못됐습니다.1");
+					else {
+						System.out.println("입력 값이 잘못됐습니다.1");
+					}
 					break;
-			
+					
 				case 2:
 					System.out.println("==========================");
 					System.out.println("현황 보기");
@@ -146,12 +152,12 @@ public class Main {
 						System.out.println(keyy+": "+rRet3.get(keyy));
 					}
 					System.out.println("==========================");
-					break;
+					break;//while
 			
 				case 3:
 					System.out.println("프로그램 종료");
 					flag = false;
-					break;
+					break;//while
 			
 				default : 
 					System.out.println("입력값이 잘못되었습니다.");
